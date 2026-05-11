@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Property Review</title>
+    <title>Guest Review</title>
     <style>
         * {
             margin: 0;
@@ -13,67 +13,149 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Tropical subtle background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(255, 193, 7, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(76, 175, 80, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
 
         .container {
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 40px 30px;
-            max-width: 500px;
+            border-radius: 20px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            max-width: 520px;
             width: 100%;
+        }
+
+        .hero {
+            padding: 50px 40px 30px;
             text-align: center;
+            position: relative;
         }
 
-        h1 {
-            font-size: 28px;
-            color: #333;
-            margin-bottom: 10px;
+        /* Dynamic hero background based on property */
+        body.villa .hero {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
         }
 
-        .subtitle {
-            color: #666;
+        body.casa .hero {
+            background: linear-gradient(135deg, #d4a574 0%, #c99156 100%);
+        }
+
+        .property-name {
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
             font-size: 16px;
-            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+            letter-spacing: 0.3px;
         }
 
-        /* Rating Section */
-        .rating-section {
+        .content {
+            padding: 40px 40px;
+        }
+
+        .rating-prompt {
+            font-size: 18px;
+            color: #2c3e50;
             margin-bottom: 30px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* Star Rating Card */
+        .rating-card {
+            background: #f8fafb;
+            border-radius: 16px;
+            padding: 30px 20px;
+            margin-bottom: 30px;
+            border: 2px solid #f0f3f7;
+            transition: all 0.3s ease;
+        }
+
+        .rating-card:hover {
+            border-color: #e0e6f0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
         }
 
         .stars {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 16px;
+            margin-bottom: 12px;
         }
 
         .star {
-            width: 50px;
-            height: 50px;
-            font-size: 32px;
+            width: 56px;
+            height: 56px;
+            font-size: 36px;
             cursor: pointer;
-            background: none;
-            border: none;
+            background: white;
+            border: 2px solid #e8eef5;
+            border-radius: 12px;
             padding: 0;
-            transition: transform 0.2s, filter 0.2s;
-            color: #ddd;
+            transition: all 0.2s ease;
+            color: #cbd5e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 300;
         }
 
         .star:hover {
-            transform: scale(1.2);
-            filter: drop-shadow(0 0 5px rgba(102, 126, 234, 0.5));
+            transform: translateY(-4px);
+            border-color: #ffd700;
+            background: #fffbf0;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.25);
         }
 
         .star.active {
             color: #ffd700;
+            background: #fffbf0;
+            border-color: #ffd700;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+
+        .rating-label {
+            font-size: 13px;
+            color: #7d8fa3;
+            text-align: center;
+            font-weight: 500;
         }
 
         /* Thank You Section */
@@ -83,14 +165,15 @@
 
         .thank-you-section.show {
             display: block;
-            animation: slideIn 0.3s ease-out;
+            animation: slideIn 0.4s ease-out;
         }
 
         .thank-you-message {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 25px;
-            line-height: 1.5;
+            font-size: 17px;
+            color: #2c3e50;
+            margin-bottom: 28px;
+            line-height: 1.6;
+            font-weight: 500;
         }
 
         .button-group {
@@ -102,13 +185,14 @@
         .review-button {
             padding: 14px 24px;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
+            text-align: center;
         }
 
         .review-button.google {
@@ -119,7 +203,7 @@
         .review-button.google:hover {
             background: #357ae8;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
+            box-shadow: 0 6px 16px rgba(66, 133, 244, 0.35);
         }
 
         .review-button.airbnb {
@@ -130,7 +214,7 @@
         .review-button.airbnb:hover {
             background: #e74c51;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 90, 95, 0.4);
+            box-shadow: 0 6px 16px rgba(255, 90, 95, 0.35);
         }
 
         .review-button.vrbo {
@@ -141,7 +225,11 @@
         .review-button.vrbo:hover {
             background: #002c5f;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 53, 128, 0.4);
+            box-shadow: 0 6px 16px rgba(0, 53, 128, 0.35);
+        }
+
+        .review-button.hidden {
+            display: none;
         }
 
         /* Feedback Section */
@@ -151,13 +239,15 @@
 
         .feedback-section.show {
             display: block;
-            animation: slideIn 0.3s ease-out;
+            animation: slideIn 0.4s ease-out;
         }
 
         .feedback-prompt {
-            color: #333;
-            margin-bottom: 20px;
+            color: #2c3e50;
+            margin-bottom: 24px;
             font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
         }
 
         .form-group {
@@ -167,72 +257,98 @@
 
         label {
             display: block;
-            margin-bottom: 8px;
-            color: #333;
+            margin-bottom: 10px;
+            color: #2c3e50;
             font-weight: 600;
             font-size: 14px;
+            letter-spacing: 0.2px;
         }
 
         textarea {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 14px;
+            border: 2px solid #e8eef5;
+            border-radius: 10px;
             font-family: inherit;
             font-size: 14px;
             resize: vertical;
             min-height: 120px;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            background: #f8fafb;
+            color: #2c3e50;
+        }
+
+        textarea::placeholder {
+            color: #a0aec0;
         }
 
         textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #cbd5e0;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(203, 213, 224, 0.1);
         }
 
         .submit-button {
             width: 100%;
             padding: 14px;
-            background: #667eea;
-            color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            color: white;
+            letter-spacing: 0.3px;
         }
 
-        .submit-button:hover {
-            background: #5568d3;
+        body.villa .submit-button {
+            background: #1e3c72;
+        }
+
+        body.villa .submit-button:hover {
+            background: #152849;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 16px rgba(30, 60, 114, 0.35);
+        }
+
+        body.casa .submit-button {
+            background: #c99156;
+        }
+
+        body.casa .submit-button:hover {
+            background: #b37f45;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(201, 145, 86, 0.35);
         }
 
         .submit-button:disabled {
-            background: #ccc;
+            background: #cbd5e0;
             cursor: not-allowed;
             transform: none;
         }
 
         .error-message {
             display: none;
-            color: #d32f2f;
-            font-size: 14px;
+            color: #c53030;
+            font-size: 13px;
             margin-bottom: 15px;
-            padding: 10px;
-            background: #ffebee;
+            padding: 12px;
+            background: #fed7d7;
             border-radius: 8px;
+            border-left: 4px solid #c53030;
         }
 
         .success-message {
             display: none;
-            color: #388e3c;
-            font-size: 14px;
+            color: #22543d;
+            font-size: 13px;
             margin-bottom: 15px;
-            padding: 10px;
-            background: #e8f5e9;
+            padding: 12px;
+            background: #c6f6d5;
             border-radius: 8px;
+            border-left: 4px solid #22543d;
+            animation: slideIn 0.3s ease-out;
         }
 
         .success-message.show {
@@ -242,7 +358,7 @@
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(12px);
             }
             to {
                 opacity: 1;
@@ -252,21 +368,46 @@
 
         @media (max-width: 480px) {
             .container {
-                padding: 30px 20px;
+                border-radius: 16px;
+                margin: 20px;
             }
 
-            h1 {
-                font-size: 24px;
+            .hero {
+                padding: 40px 28px 24px;
+            }
+
+            .property-name {
+                font-size: 28px;
+                margin-bottom: 6px;
+            }
+
+            .tagline {
+                font-size: 15px;
+            }
+
+            .content {
+                padding: 30px 28px;
+            }
+
+            .rating-prompt {
+                font-size: 16px;
+                margin-bottom: 24px;
+            }
+
+            .rating-card {
+                padding: 24px 16px;
+                margin-bottom: 24px;
             }
 
             .stars {
-                gap: 8px;
+                gap: 12px;
             }
 
             .star {
-                width: 44px;
-                height: 44px;
-                font-size: 28px;
+                width: 50px;
+                height: 50px;
+                font-size: 32px;
+                border-radius: 10px;
             }
 
             .button-group {
@@ -277,50 +418,123 @@
                 padding: 12px 20px;
                 font-size: 14px;
             }
+
+            .thank-you-message {
+                font-size: 16px;
+                margin-bottom: 20px;
+            }
+
+            label {
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+
+            textarea {
+                padding: 12px;
+                font-size: 14px;
+                min-height: 100px;
+            }
+
+            .submit-button {
+                padding: 12px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>How was your stay?</h1>
-        <p class="subtitle">We'd love to hear from you</p>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="hero">
+                <h1 class="property-name" id="propertyName">Villa Ranguana</h1>
+                <p class="tagline">Thank you for staying with us</p>
+            </div>
 
-        <div class="rating-section">
-            <div class="stars">
-                <button class="star" data-rating="1">★</button>
-                <button class="star" data-rating="2">★</button>
-                <button class="star" data-rating="3">★</button>
-                <button class="star" data-rating="4">★</button>
-                <button class="star" data-rating="5">★</button>
-            </div>
-        </div>
+            <div class="content">
+                <p class="rating-prompt">How was your stay?</p>
 
-        <div class="thank-you-section" id="thankYouSection">
-            <div class="thank-you-message">
-                Thank you for your amazing feedback! Help others discover this property:
-            </div>
-            <div class="button-group">
-                <a href="https://www.google.com/maps" class="review-button google" target="_blank">Google Reviews</a>
-                <a href="https://www.airbnb.com" class="review-button airbnb" target="_blank">Airbnb</a>
-                <a href="https://www.vrbo.com" class="review-button vrbo" target="_blank">VRBO</a>
-            </div>
-        </div>
+                <div class="rating-card">
+                    <div class="stars">
+                        <button class="star" data-rating="1" title="Poor">★</button>
+                        <button class="star" data-rating="2" title="Fair">★</button>
+                        <button class="star" data-rating="3" title="Good">★</button>
+                        <button class="star" data-rating="4" title="Very Good">★</button>
+                        <button class="star" data-rating="5" title="Excellent">★</button>
+                    </div>
+                    <p class="rating-label">Click a star to rate</p>
+                </div>
 
-        <div class="feedback-section" id="feedbackSection">
-            <div class="feedback-prompt">
-                We're sorry to hear that. Help us improve your experience:
+                <div class="thank-you-section" id="thankYouSection">
+                    <div class="thank-you-message">
+                        Thank you for your amazing feedback! Help other guests discover us:
+                    </div>
+                    <div class="button-group">
+                        <a class="review-button google" id="googleButton" href="#" target="_blank">Google Reviews</a>
+                        <a class="review-button airbnb" id="airbnbButton" href="#" target="_blank">Airbnb</a>
+                        <a class="review-button vrbo" id="vrboButton" href="#" target="_blank">VRBO</a>
+                    </div>
+                </div>
+
+                <div class="feedback-section" id="feedbackSection">
+                    <div class="feedback-prompt">
+                        We're sorry to hear that. Help us improve your experience:
+                    </div>
+                    <div class="error-message" id="errorMessage"></div>
+                    <div class="success-message" id="successMessage">Thank you! Your feedback has been received.</div>
+                    <div class="form-group">
+                        <label for="feedback">What could we improve?</label>
+                        <textarea id="feedback" placeholder="Please share your thoughts..." required></textarea>
+                    </div>
+                    <button class="submit-button" id="submitButton">Submit Feedback</button>
+                </div>
             </div>
-            <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage">Thank you! Your feedback has been received.</div>
-            <div class="form-group">
-                <label for="feedback">What could we do better?</label>
-                <textarea id="feedback" placeholder="Please share your thoughts..." required></textarea>
-            </div>
-            <button class="submit-button" id="submitButton">Submit Feedback</button>
         </div>
     </div>
 
     <script>
+        // Property configuration
+        const properties = {
+            villa: {
+                name: 'Villa Ranguana',
+                reviews: {
+                    google: 'https://search.google.com/local/writereview?placeid=0x8f5d89a73df9f9db:0xe6d160e307d5a53b',
+                    airbnb: 'https://www.airbnb.com/rooms/38763025',
+                    vrbo: 'https://www.vrbo.com/1779764'
+                }
+            },
+            casa: {
+                name: 'Casa Ranguana',
+                reviews: {
+                    airbnb: 'https://www.airbnb.com/rooms/1191331380306324345',
+                    vrbo: 'https://www.vrbo.com/3025760'
+                }
+            }
+        };
+
+        // Initialize
+        function initPage() {
+            const params = new URLSearchParams(window.location.search);
+            const property = params.get('property') || 'villa';
+            const config = properties[property] || properties.villa;
+
+            // Set theme
+            document.body.className = property;
+            document.getElementById('propertyName').textContent = config.name;
+
+            // Set review links
+            const googleBtn = document.getElementById('googleButton');
+            const airbnbBtn = document.getElementById('airbnbButton');
+            const vrboBtn = document.getElementById('vrboButton');
+
+            googleBtn.href = config.reviews.google || '#';
+            if (!config.reviews.google) {
+                googleBtn.classList.add('hidden');
+            }
+
+            airbnbBtn.href = config.reviews.airbnb || '#';
+            vrboBtn.href = config.reviews.vrbo || '#';
+        }
+
         const stars = document.querySelectorAll('.star');
         const thankYouSection = document.getElementById('thankYouSection');
         const feedbackSection = document.getElementById('feedbackSection');
@@ -374,14 +588,12 @@
             errorMessage.style.display = 'none';
 
             try {
-                // Get webhook URL from:
-                // 1. URL query parameter: ?webhook=YOUR_URL
-                // 2. Or replace WEBHOOK_URL_PLACEHOLDER below
                 const params = new URLSearchParams(window.location.search);
                 const webhookUrl = params.get('webhook') || 'WEBHOOK_URL_PLACEHOLDER';
+                const property = params.get('property') || 'villa';
 
                 if (webhookUrl === 'WEBHOOK_URL_PLACEHOLDER') {
-                    throw new Error('Webhook URL not configured. Add ?webhook=YOUR_URL to the URL or update WEBHOOK_URL_PLACEHOLDER in the HTML.');
+                    throw new Error('Webhook URL not configured. Add ?webhook=YOUR_URL to the URL.');
                 }
 
                 const response = await fetch(webhookUrl, {
@@ -390,6 +602,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
+                        property: property,
                         rating: selectedRating,
                         feedback: feedback,
                         timestamp: new Date().toISOString()
@@ -427,6 +640,9 @@
                 submitButton.click();
             }
         });
+
+        // Initialize on page load
+        initPage();
     </script>
 </body>
 </html>
