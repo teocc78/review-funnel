@@ -9,7 +9,11 @@
       "Bash(git branch:*)",
       "Bash(git push:*)",
       "Bash(true:*)",
-      "Bash(gh:*)"
+      "Bash(gh:*)",
+      "Bash(git log:*)",
+      "Bash(echo:*)",
+      "Bash(git fetch:*)",
+      "Bash(git pull:*)"
     ],
     "deny": [],
     "ask": []
